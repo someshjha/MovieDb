@@ -133,8 +133,8 @@ public class Favorite extends Model implements Serializable {
     }
 
     public Boolean getState(String id){
-        Movie movie = new Select()
-                .from(Movie.class)
+        Favorite movie = new Select()
+                .from(Favorite.class)
                 .where("Movieid = ?", id)
                 .executeSingle();
 

@@ -96,8 +96,9 @@ public class OverviewFragment extends Fragment {
 
 
     private void populateDate(final Movie movieObject){
-        if((AAUtility.get(Favorite.class,"Movieid = ?", movieObject.getMovieId())) != null) {
-            Favorite movie = AAUtility.get(Favorite.class,"Movieid = ?", movieObject.getMovieId());
+        Favorite movie = AAUtility.get(Favorite.class,"Movieid = ?", movieObject.getMovieId());
+        if(movie != null) {
+
             isFavorite = movie.getState(movieObject.getMovieId());
         }
         if(isFavorite){
