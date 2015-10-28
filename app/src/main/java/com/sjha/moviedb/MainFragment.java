@@ -159,7 +159,7 @@ public class MainFragment extends Fragment {
                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                            mSortBy = listConference.getItemAtPosition(position).toString();
-                           GetMovies getMovies = new GetMovies();
+                           GetMoviesFromURL getMovies = new GetMoviesFromURL();
                            if (mSortBy.equals(getString(R.string.mostPopularLbl))) {
                                mSortBy = Constants.SORT_OPTION_POP;
                                AAUtility.deleteList(Movie.class);
@@ -187,6 +187,7 @@ public class MainFragment extends Fragment {
                            }else if (mSortBy.equals(getString(R.string.favMovie))){
                                List<Favorite> getMovie = movieListFav.getFavMovies();
                                if(getMovie.size() != 0){
+
                                    setGridForImage(castFavToMovie(getMovie));
                                }else{
                                    Toast.makeText(getActivity(), "No Favorite Movie", Toast.LENGTH_SHORT).show();
@@ -219,6 +220,7 @@ public class MainFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         MovieList movieListPop = (MovieList)intent.getSerializableExtra(Constants.MOVIE_POP);
         movieListFav = (MovieList)intent.getSerializableExtra(Constants.MOVIE_FAV);
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         initialize(rootView);
         if(isNetworkConnected()){
@@ -227,8 +229,11 @@ public class MainFragment extends Fragment {
             AAUtility.deleteList(Movie.class);
             getMoviesFromURL.execute(mSortBy);
             List<Movie> getMovie = movieListPop.getMovies();
+
             if(getMovie.size() != 0){
+
                 setGridForImage(getMovie);
+
             }
         }else{
             List<Movie> getMovie = getMoviesFromStorage();
