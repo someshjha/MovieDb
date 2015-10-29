@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.sjha.moviedb.Adapter.TrailerListAdapter;
 import com.sjha.moviedb.Model.Favorite;
 import com.sjha.moviedb.Model.Movie;
+import com.sjha.moviedb.Model.MovieList;
 import com.sjha.moviedb.Model.Trailer;
 import com.squareup.picasso.Picasso;
 
@@ -71,6 +74,24 @@ public class OverviewFragment extends Fragment {
         GetTrailers getTrailers = new GetTrailers();
         getTrailers.execute(mMovie.getMovieId());
 
+        rootview.setFocusableInTouchMode(true);
+        rootview.requestFocus();
+        rootview.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+                    Log.i("BackKey", "onKey Back listener is working!!!");
+                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    MovieList favMovieList = new MovieList();
+                    favMovieList.setMoviesFavorite();
+                    Intent favMovie = new Intent(getContext(),MainActivity.class);
+                    favMovie.putExtra(Constants.MOVIE_FAV, favMovieList);
+                    return true;
+                }else
+                    return false;
+            }
+        });
+
         return rootview;
 
 
@@ -96,7 +117,7 @@ public class OverviewFragment extends Fragment {
 
 
     private void populateDate(final Movie movieObject){
-        Favorite movie = AAUtility.get(Favorite.class,"Movieid = ?", movieObject.getMovieId());
+        Favorite movie = AAUtility.get(Favorite.class, "Movieid = ?", movieObject.getMovieId());
         if(movie != null) {
 
             isFavorite = movie.getState(movieObject.getMovieId());
@@ -160,6 +181,9 @@ public class OverviewFragment extends Fragment {
         favMovie.save();
         getAll();
     }
+
+
+
 
 
 

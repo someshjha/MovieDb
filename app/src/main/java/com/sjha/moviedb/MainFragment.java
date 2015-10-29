@@ -185,16 +185,7 @@ public class MainFragment extends Fragment {
                                AAUtility.deleteList(Movie.class);
                                getMovies.execute(mSortBy);
                            }else if (mSortBy.equals(getString(R.string.favMovie))){
-                               List<Favorite> getMovie = movieListFav.getFavMovies();
-                               if(getMovie.size() != 0){
-
-                                   setGridForImage(castFavToMovie(getMovie));
-                               }else{
-                                   Toast.makeText(getActivity(), "No Favorite Movie", Toast.LENGTH_SHORT).show();
-                                   /*mSortBy = Constants.SORT_OPTION_POP;
-                                   AAUtility.deleteList(Movie.class);
-                                   getMovies.execute(mSortBy);*/
-                               }
+                               getFavoriteMovie();
                            }
                            dialog.dismiss();
                        }
@@ -212,6 +203,21 @@ public class MainFragment extends Fragment {
 
     }
 
+
+    private void getFavoriteMovie(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MovieList favMovieList = new MovieList();
+                favMovieList.setMoviesFavorite();
+                List<Favorite> getMovie = favMovieList.getFavMovies();
+                if (getMovie.size() != 0) {
+                    setGridForImage(castFavToMovie(getMovie));
+                } else
+                    Toast.makeText(getActivity(), "No Favorite Movie", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -253,8 +259,11 @@ public class MainFragment extends Fragment {
             mSwipeContainer.setRefreshing(false);
             if(isNetworkConnected()){
                 mSwipeContainer.setVisibility(View.VISIBLE);
-                GetMovies getMoviesFromURL = new GetMovies();
-                getMoviesFromURL.execute(mSortBy);
+                GetMoviesFromURL getMoviesFromURL = new GetMoviesFromURL();
+                if(mSortBy.equals(getString(R.string.favMovie))){
+                    getFavoriteMovie();
+                }else
+                    getMoviesFromURL.execute(mSortBy);
             }else{
                 Toast.makeText(getContext(), getString(R.string.noConnection), Toast.LENGTH_SHORT).show();
             }
