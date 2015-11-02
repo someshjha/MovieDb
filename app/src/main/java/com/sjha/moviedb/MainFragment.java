@@ -285,7 +285,6 @@ public class MainFragment extends Fragment {
 
 
 
-
     public class GetMoviesFromURL extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         ProgressDialog pd = new ProgressDialog(getActivity());
@@ -422,6 +421,7 @@ public class MainFragment extends Fragment {
                         Movie movieObject =  movies.get(position);
                         detail.putExtra(Constants.DETAIL_INTENT, movieObject);
                         getActivity().startActivity(detail);
+
                     }
                 });
             }

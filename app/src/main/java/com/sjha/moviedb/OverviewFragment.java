@@ -7,9 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import com.sjha.moviedb.Adapter.TrailerListAdapter;
 import com.sjha.moviedb.Model.Favorite;
 import com.sjha.moviedb.Model.Movie;
-import com.sjha.moviedb.Model.MovieList;
 import com.sjha.moviedb.Model.Trailer;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +54,7 @@ public class OverviewFragment extends Fragment {
     private ImageButton markButton;
     private TextView markFavTxt;
     private boolean isFavorite;
+    private Movie mMovie;
 
     public OverviewFragment(){
 
@@ -70,34 +68,35 @@ public class OverviewFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         initialize(rootview);
         final Movie mMovie = (Movie) intent.getSerializableExtra(Constants.DETAIL_INTENT);
-        populateDate(mMovie);
-        GetTrailers getTrailers = new GetTrailers();
-        getTrailers.execute(mMovie.getMovieId());
+        if(mMovie == null){
+            final Movie mMovieNull = AAUtility.get(Movie.class, "movieid = ?", "135397");
+            populateDate(mMovieNull);
+            GetTrailers getTrailers = new GetTrailers();
+            getTrailers.execute(mMovieNull.getMovieId());
+        }else{
+            populateDate(mMovie);
+            GetTrailers getTrailers = new GetTrailers();
+            getTrailers.execute(mMovie.getMovieId());
+        }
+
 
         rootview.setFocusableInTouchMode(true);
         rootview.requestFocus();
-        rootview.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-                    Log.i("BackKey", "onKey Back listener is working!!!");
-                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    MovieList favMovieList = new MovieList();
-                    favMovieList.setMoviesFavorite();
-                    Intent favMovie = new Intent(getContext(),MainActivity.class);
-                    favMovie.putExtra(Constants.MOVIE_FAV, favMovieList);
-                    return true;
-                }else
-                    return false;
-            }
-        });
-
         return rootview;
 
 
     }
 
-
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        trailerList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+    }
 
     private void initialize(View rootView){
         isFavorite = false;
