@@ -87,16 +87,7 @@ public class OverviewFragment extends Fragment {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        trailerList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
-    }
+
 
     private void initialize(View rootView){
         isFavorite = false;
