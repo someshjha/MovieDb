@@ -55,10 +55,13 @@ public class OverviewFragment extends Fragment {
     private TextView markFavTxt;
     private boolean isFavorite;
     private Movie mMovie;
+    static final String OVERVIEW_MOVIE = "MOVIE";
 
     public OverviewFragment(){
 
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,17 +71,22 @@ public class OverviewFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         initialize(rootview);
         final Movie mMovie = (Movie) intent.getSerializableExtra(Constants.DETAIL_INTENT);
-        if(mMovie == null){
-            final Movie mMovieNull = AAUtility.get(Movie.class, "movieid = ?", "135397");
-            populateDate(mMovieNull);
-            GetTrailers getTrailers = new GetTrailers();
-            getTrailers.execute(mMovieNull.getMovieId());
-        }else{
+        if(mMovie != null){
             populateDate(mMovie);
-            GetTrailers getTrailers = new GetTrailers();
-            getTrailers.execute(mMovie.getMovieId());
-        }
+        }else {
 
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Movie testNull = AAUtility.get(Movie.class, "movieid = ?", "135397");
+                    populateDate(testNull);
+                }
+            });
+
+
+        }
+        GetTrailers getTrailers = new GetTrailers();
+        getTrailers.execute(mMovie.getMovieId());
 
         rootview.setFocusableInTouchMode(true);
         rootview.requestFocus();
@@ -107,6 +115,7 @@ public class OverviewFragment extends Fragment {
 
 
     private void populateDate(final Movie movieObject){
+
         Favorite movie = AAUtility.get(Favorite.class, "Movieid = ?", movieObject.getMovieId());
         if(movie != null) {
 

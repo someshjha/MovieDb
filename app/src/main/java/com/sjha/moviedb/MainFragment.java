@@ -428,6 +428,12 @@ public class MainFragment extends Fragment {
             pd.dismiss();
         }
     }
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Movie movie);
+    }
 
 
 
