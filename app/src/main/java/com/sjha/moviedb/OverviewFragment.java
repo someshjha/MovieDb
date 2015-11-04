@@ -73,20 +73,42 @@ public class OverviewFragment extends Fragment {
         final Movie mMovie = (Movie) intent.getSerializableExtra(Constants.DETAIL_INTENT);
         if(mMovie != null){
             populateDate(mMovie);
+            GetTrailers getTrailers = new GetTrailers();
+            getTrailers.execute(mMovie.getMovieId());
+
         }else {
+            Movie testNull = new Movie();
+            testNull.setTitle("Movie Title");
+            testNull.setId("210289");
+            testNull.setBackdropPath("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg");
+            testNull.setPosterPath("/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg");
+            testNull.setVoteCount("10");
+            testNull.setVoteAverage(9.00);
+            testNull.setOverview("The movie's Overview would be displayed here.");
+            testNull.setReleaseDate("Never");
+            testNull.setPopularity("78.39293");
+            populateDate(testNull);
 
-            getActivity().runOnUiThread(new Runnable() {
+            /*Trailer keyObj = new Trailer();
+            keyObj.setKey("xkKcdK1u95s");
+            keyObj.setName("Null");
+            keyObj.setType("Blahhhh");
+            final ArrayList<Trailer> trailer = new ArrayList<>();
+            trailer.add(keyObj);
+
+            trailerList = (ListView)getActivity().findViewById(R.id.listViewTrailer);
+            trailerList.setAdapter(new TrailerListAdapter(getContext(), trailer));
+            trailerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void run() {
-                    final Movie testNull = AAUtility.get(Movie.class, "movieid = ?", "135397");
-                    populateDate(testNull);
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Trailer trailerPosObject = trailer.get(position);
+                    String key = trailerPosObject.getKey();
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.API_TRAILERS + key));
+                    startActivity(i);
                 }
-            });
+            });*/
 
-
-        }
-        GetTrailers getTrailers = new GetTrailers();
-        getTrailers.execute(mMovie.getMovieId());
+         }
 
         rootview.setFocusableInTouchMode(true);
         rootview.requestFocus();
