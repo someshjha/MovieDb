@@ -5,7 +5,7 @@ package com.sjha.moviedb;
  */
 public class Constants {
 
-    public static final String API_KEY = "9a6dda644223a6dc7f36eb04698a2cf1";
+    public static final String API_KEY = "Your App key";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     public static final String BACKDROP_PATH = "backdrop_path";
     public static final String POSTER_PATH = "poster_path";
